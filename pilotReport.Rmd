@@ -1,0 +1,126 @@
+---
+title: "COD Reproducibility Report"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+#### Article ID: set_htkUz
+#### Pilot: [Insert name of pilot]
+#### Co-pilot: Tom Hardwicke  
+#### Start date: [Insert start date - use US format]
+#### End date: [Insert end date - use US format]   
+
+-------
+
+#### Methods summary: 
+
+The experiment has three between subject conditions: age (7.5 vs. 8.5-month-olds), condition (side vs. middle-contact), and event (wide vs. narrow-box). Authors have used an ANOVA, as well as planned comparisons to support the following claim: 
+
+> 7.5- but not 8.5-month-olds viewed as unexpected a possible event in which a wide box remained stable when released with only the middle third of its bottom surface resting on a narrow platform. 
+
+------
+
+#### Target outcomes: 
+
+> Infants' looking times in the main experiment (Fig. 3, Table 1) were compared by an ANOVA with age (7.5 or 8.5 months), condition (side- or middle-contact), and event (wide- or narrow-box) as between-subjects factors. The analysis yielded a significant main effect of event, F(1, 56) = 26.25, p < 0.0001, a significant Condition $\times$ Event interaction, F(1, 56) = 5.18, p < 0.05, and, critically, a significant Age $\times$ Condition $\times$ Event interaction, F(1, 56) = 7.13, p < 0.01, $\eta_p^2$ = 0.11. As predicted, planned comparisons revealed that at 7.5 months, infants in both the side-contact condition, F(1, 56) = 9.73, p < 0.005, Cohen's d = 1.38, and the middle-contact condition, F(1, 56) = 12.32, p < 0.001, d = 1.83, looked reliably longer if shown the wide-box as opposed to the narrow-box event; at 8.5 months, infants in the side-contact condition again looked reliably longer if shown the wide-box as opposed to the narrow-box event, F(1, 56) = 18.33, p < 0.0001, d = 2.00, but infants in the middle-contact condition looked equally at the two events, F(1, 56) < 1. The two age groups differed reliably in their looking times at the wide-box event in the middle-contact condition, F(1, 56) = 7.96, p < 0.01, d = 1.43, but not the side-contact condition, F(1, 56) = 1.16, p > 0.25; there were no significant differences for the narrow-box event, both Fs(1, 56) < 1.84, ps > 0.20.
+
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(echo=TRUE, warning=FALSE, message=FALSE)
+```
+
+## Step 1: Load packages
+
+```{r}
+library(tidyverse) # for data munging
+library(readr)
+library(knitr) # for kable table formating
+library(haven) # import and export 'SPSS', 'Stata' and 'SAS' Files
+library(readxl) # import excel files
+library(CODreports) # custom report functions
+library(lsr) # to calculate eta squared
+```
+
+## Step 2: Load data
+
+The original excel data file is extremely clean and clear to understand. However, it is not in a tidy format or any format that can be directly used to check for reliability. Authors have provided the data in a format that fascilitates undestanding the data and the relevant statistics but makes it hard to reproduce the analyses using R. You can see a screenshot of the original data file below.  
+
+![](./data/original_data.png) 
+
+I created a long data file by manually cleaning the original data file. The new file has three extra columns: experiment (main vs. control), condition (side vs. middle), and age in months (7.5 vs 8.5). The blocks of data have 5 columns each. I stacked them according to their experiment type, condition, and age, and created a tidy csv file.
+
+## Step 3: Tidy data
+
+```{r}
+cleaned_data <- read.csv("./data/data_manualclean.csv")
+cleaned_data$age_months <- as.factor(cleaned_data$age_months)
+head(cleaned_data)
+```
+
+## Step 4: Run analysis
+
+<!-- ### Pre-processing -->
+
+<!-- [you can remove this section if no pre-processing is required] -->
+
+<!-- ```{r} -->
+<!-- ``` -->
+
+### Descriptive statistics
+
+```{r}
+table_1 <-
+cleaned_data %>%
+  group_by(experiment, age_months, condition, event) %>%
+  summarise(LT_mean = mean(LT), st_dev=sd(LT))
+
+kable(table_1, digits = 1)
+```
+
+All the reported numbers in Table 1 (page 104) of the paper are replicated in the table above.
+
+### Inferential statistics
+
+Going back to the target outcomes, the paper has reported a couple of ANOVAs: 
+
+> Infants' looking times in the main experiment (Fig. 3, Table 1) were compared by an ANOVA with age (7.5 or 8.5 months), condition (side- or middle-contact), and event (wide- or narrow-box) as between-subjects factors. The analysis yielded a significant main effect of event, F(1, 56) = 26.25, p < 0.0001, a significant Condition $\times$ Event interaction, F(1, 56) = 5.18, p < 0.05, and, critically, a significant Age $\times$ Condition $\times$ Event interaction, F(1, 56) = 7.13, p < 0.01, $\eta_p^2$ = 0.11.
+
+Below, I replicate the above analysis in R:
+
+```{r}
+main_data <- filter(cleaned_data, experiment=="main")
+model <- lm(LT ~ age_months * condition * event, data=main_data)
+anova(model)
+etaSquared(model)
+```
+
+All the significant results reported are successfully replicated. The effect size $\eta_p^2$ is also accurately reported.
+
+> As predicted, planned comparisons revealed that at 7.5 months, infants in both the side-contact condition, F(1, 56) = 9.73, p < 0.005, Cohen's d = 1.38, and the middle-contact condition, F(1, 56) = 12.32, p < 0.001, d = 1.83, looked reliably longer if shown the wide-box as opposed to the narrow-box event. 
+
+```{r}
+summary(model)
+```
+
+> At 8.5 months, infants in the side-contact condition again looked reliably longer if shown the wide-box as opposed to the narrow-box event, F(1, 56) = 18.33, p < 0.0001, d = 2.00, but infants in the middle-contact condition looked equally at the two events, F(1, 56) < 1. The two age groups differed reliably in their looking times at the wide-box event in the middle-contact condition, F(1, 56) = 7.96, p < 0.01, d = 1.43, but not the side-contact condition, F(1, 56) = 1.16, p > 0.25; there were no significant differences for the narrow-box event, both Fs(1, 56) < 1.84, ps > 0.20.
+
+## Step 5: Conclusion
+
+This report successfully reproduced all the descriptive statistics reported in the original paper. It also successfully reproduced the analyses reported in the target outcome above. The only problem encountered was that the data provided was not readily useful and needed cleanup. It is preferable if data is provided in a tidy format.
+
+```{r}
+codReport(Report_Type = 'pilot',
+          Article_ID = 'htkUz', 
+          Insufficient_Information_Errors = 1,
+          Decision_Errors = 0, 
+          Major_Numerical_Errors = 0, 
+          Minor_Numerical_Errors = 0)
+```
+
+## Package Versions
+The package versions used in this report:
+
+```{r session_info, include=TRUE, echo=TRUE, results='markup'}
+devtools::session_info()
+```
