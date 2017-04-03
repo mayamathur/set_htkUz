@@ -514,127 +514,7 @@ anova(model)</code></pre>
 ## Residual standard error: 11.89 on 56 degrees of freedom
 ## Multiple R-squared:   0.44,  Adjusted R-squared:  0.3699 
 ## F-statistic: 6.284 on 7 and 56 DF,  p-value: 1.857e-05</code></pre>
-<pre class="r"><code>aov(LT ~ age_months * condition * event, data=main_data)$coefficients</code></pre>
-<pre><code>##                               (Intercept) 
-##                                   24.5750 
-##                             age_months8.5 
-##                                    8.0500 
-##                             conditionside 
-##                                    1.2750 
-##                             eventwide-box 
-##                                   20.8750 
-##               age_months8.5:conditionside 
-##                                   -8.5625 
-##               age_months8.5:eventwide-box 
-##                                  -24.8250 
-##               conditionside:eventwide-box 
-##                                   -2.3375 
-## age_months8.5:conditionside:eventwide-box 
-##                                   31.7375</code></pre>
-<pre class="r"><code>TukeyHSD(aov(LT ~ age_months * condition * event, data=main_data))</code></pre>
-<pre><code>##   Tukey multiple comparisons of means
-##     95% family-wise confidence level
-## 
-## Fit: aov(formula = LT ~ age_months * condition * event, data = main_data)
-## 
-## $age_months
-##              diff       lwr      upr     p adj
-## 8.5-7.5 -0.709375 -6.663716 5.244966 0.8122423
-## 
-## $condition
-##                 diff       lwr      upr     p adj
-## side-middle 3.759375 -2.194966 9.713716 0.2111883
-## 
-## $event
-##                         diff      lwr      upr   p adj
-## wide-box-narrow-box 15.22813 9.273784 21.18247 3.8e-06
-## 
-## $`age_months:condition`
-##                           diff       lwr      upr     p adj
-## 8.5:middle-7.5:middle -4.36250 -15.49301  6.76801 0.7280965
-## 7.5:side-7.5:middle    0.10625 -11.02426 11.23676 0.9999941
-## 8.5:side-7.5:middle    3.05000  -8.08051 14.18051 0.8864602
-## 7.5:side-8.5:middle    4.46875  -6.66176 15.59926 0.7131651
-## 8.5:side-8.5:middle    7.41250  -3.71801 18.54301 0.3016260
-## 8.5:side-7.5:side      2.94375  -8.18676 14.07426 0.8965279
-## 
-## $`age_months:event`
-##                                   diff         lwr      upr     p adj
-## 8.5:narrow-box-7.5:narrow-box  3.76875  -7.3617601 14.89926 0.8066368
-## 7.5:wide-box-7.5:narrow-box   19.70625   8.5757399 30.83676 0.0001045
-## 8.5:wide-box-7.5:narrow-box   14.51875   3.3882399 25.64926 0.0056840
-## 7.5:wide-box-8.5:narrow-box   15.93750   4.8069899 27.06801 0.0020367
-## 8.5:wide-box-8.5:narrow-box   10.75000  -0.3805101 21.88051 0.0620150
-## 8.5:wide-box-7.5:wide-box     -5.18750 -16.3180101  5.94301 0.6081129
-## 
-## $`condition:event`
-##                                       diff         lwr      upr     p adj
-## side:narrow-box-middle:narrow-box -3.00625 -14.1367601  8.12426 0.8906638
-## middle:wide-box-middle:narrow-box  8.46250  -2.6680101 19.59301 0.1954418
-## side:wide-box-middle:narrow-box   18.98750   7.8569899 30.11801 0.0001883
-## middle:wide-box-side:narrow-box   11.46875   0.3382399 22.59926 0.0410682
-## side:wide-box-side:narrow-box     21.99375  10.8632399 33.12426 0.0000152
-## side:wide-box-middle:wide-box     10.52500  -0.6055101 21.65551 0.0702197
-## 
-## $`age_months:condition:event`
-##                                                 diff         lwr       upr
-## 8.5:middle:narrow-box-7.5:middle:narrow-box   8.0500 -10.6656231 26.765623
-## 7.5:side:narrow-box-7.5:middle:narrow-box     1.2750 -17.4406231 19.990623
-## 8.5:side:narrow-box-7.5:middle:narrow-box     0.7625 -17.9531231 19.478123
-## 7.5:middle:wide-box-7.5:middle:narrow-box    20.8750   2.1593769 39.590623
-## 8.5:middle:wide-box-7.5:middle:narrow-box     4.1000 -14.6156231 22.815623
-## 7.5:side:wide-box-7.5:middle:narrow-box      19.8125   1.0968769 38.528123
-## 8.5:side:wide-box-7.5:middle:narrow-box      26.2125   7.4968769 44.928123
-## 7.5:side:narrow-box-8.5:middle:narrow-box    -6.7750 -25.4906231 11.940623
-## 8.5:side:narrow-box-8.5:middle:narrow-box    -7.2875 -26.0031231 11.428123
-## 7.5:middle:wide-box-8.5:middle:narrow-box    12.8250  -5.8906231 31.540623
-## 8.5:middle:wide-box-8.5:middle:narrow-box    -3.9500 -22.6656231 14.765623
-## 7.5:side:wide-box-8.5:middle:narrow-box      11.7625  -6.9531231 30.478123
-## 8.5:side:wide-box-8.5:middle:narrow-box      18.1625  -0.5531231 36.878123
-## 8.5:side:narrow-box-7.5:side:narrow-box      -0.5125 -19.2281231 18.203123
-## 7.5:middle:wide-box-7.5:side:narrow-box      19.6000   0.8843769 38.315623
-## 8.5:middle:wide-box-7.5:side:narrow-box       2.8250 -15.8906231 21.540623
-## 7.5:side:wide-box-7.5:side:narrow-box        18.5375  -0.1781231 37.253123
-## 8.5:side:wide-box-7.5:side:narrow-box        24.9375   6.2218769 43.653123
-## 7.5:middle:wide-box-8.5:side:narrow-box      20.1125   1.3968769 38.828123
-## 8.5:middle:wide-box-8.5:side:narrow-box       3.3375 -15.3781231 22.053123
-## 7.5:side:wide-box-8.5:side:narrow-box        19.0500   0.3343769 37.765623
-## 8.5:side:wide-box-8.5:side:narrow-box        25.4500   6.7343769 44.165623
-## 8.5:middle:wide-box-7.5:middle:wide-box     -16.7750 -35.4906231  1.940623
-## 7.5:side:wide-box-7.5:middle:wide-box        -1.0625 -19.7781231 17.653123
-## 8.5:side:wide-box-7.5:middle:wide-box         5.3375 -13.3781231 24.053123
-## 7.5:side:wide-box-8.5:middle:wide-box        15.7125  -3.0031231 34.428123
-## 8.5:side:wide-box-8.5:middle:wide-box        22.1125   3.3968769 40.828123
-## 8.5:side:wide-box-7.5:side:wide-box           6.4000 -12.3156231 25.115623
-##                                                 p adj
-## 8.5:middle:narrow-box-7.5:middle:narrow-box 0.8735184
-## 7.5:side:narrow-box-7.5:middle:narrow-box   0.9999988
-## 8.5:side:narrow-box-7.5:middle:narrow-box   1.0000000
-## 7.5:middle:wide-box-7.5:middle:narrow-box   0.0187467
-## 8.5:middle:wide-box-7.5:middle:narrow-box   0.9969645
-## 7.5:side:wide-box-7.5:middle:narrow-box     0.0307549
-## 8.5:side:wide-box-7.5:middle:narrow-box     0.0011660
-## 7.5:side:narrow-box-8.5:middle:narrow-box   0.9449405
-## 8.5:side:narrow-box-8.5:middle:narrow-box   0.9206845
-## 7.5:middle:wide-box-8.5:middle:narrow-box   0.3926038
-## 8.5:middle:wide-box-8.5:middle:narrow-box   0.9975982
-## 7.5:side:wide-box-8.5:middle:narrow-box     0.5050015
-## 8.5:side:wide-box-8.5:middle:narrow-box     0.0632208
-## 8.5:side:narrow-box-7.5:side:narrow-box     1.0000000
-## 7.5:middle:wide-box-7.5:side:narrow-box     0.0338609
-## 8.5:middle:wide-box-7.5:side:narrow-box     0.9997273
-## 7.5:side:wide-box-7.5:side:narrow-box       0.0539668
-## 8.5:side:wide-box-7.5:side:narrow-box       0.0023503
-## 7.5:middle:wide-box-8.5:side:narrow-box     0.0268053
-## 8.5:middle:wide-box-8.5:side:narrow-box     0.9991842
-## 7.5:side:wide-box-8.5:side:narrow-box       0.0432381
-## 8.5:side:wide-box-8.5:side:narrow-box       0.0017775
-## 8.5:middle:wide-box-7.5:middle:wide-box     0.1101166
-## 7.5:side:wide-box-7.5:middle:wide-box       0.9999997
-## 8.5:side:wide-box-7.5:middle:wide-box       0.9850804
-## 7.5:side:wide-box-8.5:middle:wide-box       0.1625802
-## 8.5:side:wide-box-8.5:middle:wide-box       0.0102491
-## 8.5:side:wide-box-7.5:side:wide-box         0.9590965</code></pre>
+<pre class="r"><code>#TukeyHSD(aov(LT ~ age_months * condition * event, data=main_data))</code></pre>
 <blockquote>
 <p>At 8.5 months, infants in the side-contact condition again looked reliably longer if shown the wide-box as opposed to the narrow-box event, F(1, 56) = 18.33, p &lt; 0.0001, d = 2.00, but infants in the middle-contact condition looked equally at the two events, F(1, 56) &lt; 1. The two age groups differed reliably in their looking times at the wide-box event in the middle-contact condition, F(1, 56) = 7.96, p &lt; 0.01, d = 1.43, but not the side-contact condition, F(1, 56) = 1.16, p &gt; 0.25; there were no significant differences for the narrow-box event, both Fs(1, 56) &lt; 1.84, ps &gt; 0.20.</p>
 </blockquote>
@@ -680,8 +560,8 @@ anova(model)</code></pre>
 ##  ui       X11                         
 ##  language (EN)                        
 ##  collate  en_US.UTF-8                 
-##  tz       America/New_York            
-##  date     2017-03-30                  
+##  tz       America/Los_Angeles         
+##  date     2017-04-02                  
 ## 
 ##  package    * version date      
 ##  assertthat   0.1     2013-12-06

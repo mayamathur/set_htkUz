@@ -104,18 +104,8 @@ All the significant results reported are successfully reproduced. The effect siz
 > As predicted, planned comparisons revealed that at 7.5 months, infants in both the side-contact condition, F(1, 56) = 9.73, p < 0.005, Cohen's d = 1.38, and the middle-contact condition, F(1, 56) = 12.32, p < 0.001, d = 1.83, looked reliably longer if shown the wide-box as opposed to the narrow-box event. 
 
 ```{r}
-
-aga_months (7.5 vs. 8.5) 
-condition (middle vs. side)
-event (narrow vs. wide)
-
-contrasts(main_data$event)
-
 summary(model)
-
-
-aov(LT ~ age_months * condition * event, data=main_data)$coefficients
-TukeyHSD(aov(LT ~ age_months * condition * event, data=main_data))
+#TukeyHSD(aov(LT ~ age_months * condition * event, data=main_data))
 ```
 
 > At 8.5 months, infants in the side-contact condition again looked reliably longer if shown the wide-box as opposed to the narrow-box event, F(1, 56) = 18.33, p < 0.0001, d = 2.00, but infants in the middle-contact condition looked equally at the two events, F(1, 56) < 1. The two age groups differed reliably in their looking times at the wide-box event in the middle-contact condition, F(1, 56) = 7.96, p < 0.01, d = 1.43, but not the side-contact condition, F(1, 56) = 1.16, p > 0.25; there were no significant differences for the narrow-box event, both Fs(1, 56) < 1.84, ps > 0.20.
