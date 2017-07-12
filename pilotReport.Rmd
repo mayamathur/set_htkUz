@@ -6,11 +6,11 @@ output:
     toc_float: true
 ---
 
-#### Article ID: set_htkUz
-#### Pilot: [Insert name of pilot]
+#### Article ID: htkUz
+#### Pilot: Psych_MJ
 #### Co-pilot: Tom Hardwicke  
-#### Start date: [Insert start date - use US format]
-#### End date: [Insert end date - use US format]   
+#### Start date: 03/01/2017
+#### End date: 04/04/2017 
 
 -------
 
