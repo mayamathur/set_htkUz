@@ -72,7 +72,7 @@ The table below summarizes the descriptive statistics reported in the paper.
 
 ![](./table_1.png) 
 
-The code below reproduces all the reported statistics of table 1 successfully.
+The code below reproduces all the reported statistics of Table 1 successfully (16 matches).
 
 ```{r}
 table_1 <-
@@ -81,6 +81,69 @@ cleaned_data %>%
   summarise(LT_mean = mean(LT), st_dev=sd(LT))
 
 kable(table_1, digits = 1)
+
+
+##### Compare Values (MM) #####
+
+# define a vectorized compareValues
+# so we can do means and SDs together
+cV = Vectorize( compareValues, vectorize.args = c("reportedValue", "obtainedValue") )
+
+# means and SDs in the order they appear in paper
+# column 1
+cV( reportedValue = c(44.4, 12),
+    obtainedValue = table_1[ table_1$experiment=="main" & table_1$age_months == "7.5" & table_1$condition == "side" & table_1$event == "wide-box", c("LT_mean", "st_dev")] )
+
+cV( reportedValue = c(45.5, 12.4),
+    obtainedValue = table_1[ table_1$experiment=="main" & table_1$age_months == "7.5" & table_1$condition == "middle" & table_1$event == "wide-box", c("LT_mean", "st_dev")] )
+
+cV( reportedValue = c(39.7, 19.4),
+    obtainedValue = table_1[ table_1$experiment=="control" & table_1$age_months == "7.5" & table_1$condition == "side" & table_1$event == "wide-box", c("LT_mean", "st_dev")] )
+
+cV( reportedValue = c(34.7, 13.5,
+    obtainedValue = table_1[ table_1$experiment=="control" & table_1$age_months == "7.5" & table_1$condition == "middle" & table_1$event == "wide-box", c("LT_mean", "st_dev")] )
+
+# column 2
+cV( reportedValue = c(25.9, 14.8),
+    obtainedValue = table_1[ table_1$experiment=="main" & table_1$age_months == "7.5" & table_1$condition == "side" & table_1$event == "narrow-box", c("LT_mean", "st_dev")] )
+
+cV( reportedValue = c(24.6, 10.3),
+    obtainedValue = table_1[ table_1$experiment=="main" & table_1$age_months == "7.5" & table_1$condition == "middle" & table_1$event == "narrow-box", c("LT_mean", "st_dev")] )
+
+cV( reportedValue = c(34.0, 13.1),
+    obtainedValue = table_1[ table_1$experiment=="control" & table_1$age_months == "7.5" & table_1$condition == "side" & table_1$event == "narrow-box", c("LT_mean", "st_dev")] )
+
+cV( reportedValue = c(37.7, 19.0),
+    obtainedValue = table_1[ table_1$experiment=="control" & table_1$age_months == "7.5" & table_1$condition == "middle" & table_1$event == "narrow-box", c("LT_mean", "st_dev")] )
+
+
+# column 3
+cV( reportedValue = c(50.8, 11.4),
+    obtainedValue = table_1[ table_1$experiment=="main" & table_1$age_months == "8.5" & table_1$condition == "side" & table_1$event == "wide-box", c("LT_mean", "st_dev")] )
+
+cV( reportedValue = c(28.7, 11.1),
+    obtainedValue = table_1[ table_1$experiment=="main" & table_1$age_months == "8.5" & table_1$condition == "middle" & table_1$event == "wide-box", c("LT_mean", "st_dev")] )
+
+cV( reportedValue = c(36.8, 22.3),
+    obtainedValue = table_1[ table_1$experiment=="control" & table_1$age_months == "8.5" & table_1$condition == "side" & table_1$event == "wide-box", c("LT_mean", "st_dev")] )
+
+cV( reportedValue = c(33.9, 17.8),
+    obtainedValue = table_1[ table_1$experiment=="control" & table_1$age_months == "8.5" & table_1$condition == "middle" & table_1$event == "wide-box", c("LT_mean", "st_dev")] )
+
+    
+# column 4
+cV( reportedValue = c(25.3, 13.9),
+    obtainedValue = table_1[ table_1$experiment=="main" & table_1$age_months == "8.5" & table_1$condition == "side" & table_1$event == "narrow-box", c("LT_mean", "st_dev")] )
+
+cV( reportedValue = c(32.6, 7.8),
+    obtainedValue = table_1[ table_1$experiment=="main" & table_1$age_months == "8.5" & table_1$condition == "middle" & table_1$event == "narrow-box", c("LT_mean", "st_dev")] )
+
+cV( reportedValue = c(37.4, 21.7),
+    obtainedValue = table_1[ table_1$experiment=="control" & table_1$age_months == "8.5" & table_1$condition == "side" & table_1$event == "narrow-box", c("LT_mean", "st_dev")] )
+
+cV( reportedValue = c(39.8, 19.2),
+    obtainedValue = table_1[ table_1$experiment=="control" & table_1$age_months == "8.5" & table_1$condition == "middle" & table_1$event == "narrow-box", c("LT_mean", "st_dev")] )
+
 ```
 
 ### Inferential statistics
@@ -96,6 +159,22 @@ main_data <- filter(cleaned_data, experiment=="main")
 model <- lm(LT ~ age_months * condition * event, data=main_data)
 anova(model)
 etaSquared(model)
+
+# F stat
+compareValues( reportedValue = 26.25, obtainedValue = anova(model)[[ "event", "F value"]] )
+# compareValues( reportedValue = 0.0001, obtainedValue = anova(model)[[ "event", "Pr(>F)"]], isP = TRUE )
+# the p-value matches, but due to truncation at 0.0001, compareValues classifies as major error
+
+compareValues( reportedValue = 5.18, obtainedValue = anova(model)[[ "condition:event", "F value"]] )
+# p-value matches (same thing as above)
+# compareValues( reportedValue = 0.05, obtainedValue = anova(model)[[ "condition:event", "Pr(>F)"]], isP = TRUE )
+
+compareValues( reportedValue = 7.13, obtainedValue = anova(model)[[ "age_months:condition:event", "F value"]] )
+# p-value matches (same thing as above)
+# compareValues( reportedValue = 0.01, obtainedValue = anova(model)[[ "age_months:condition:event", "Pr(>F)"]], isP = TRUE )
+
+# effect size (eta^2)
+compareValues( reportedValue = 0.11, obtainedValue = etaSquared(model)[[ "age_months:condition:event", "eta.sq.part"]] )
 ```
 
 All the significant results reported are successfully reproduced. The effect size $\eta_p^2$ is also accurately reported.
@@ -103,22 +182,144 @@ All the significant results reported are successfully reproduced. The effect siz
 > As predicted, planned comparisons revealed that at 7.5 months, infants in both the side-contact condition, F(1, 56) = 9.73, p < 0.005, Cohen's d = 1.38, and the middle-contact condition, F(1, 56) = 12.32, p < 0.001, d = 1.83, looked reliably longer if shown the wide-box as opposed to the narrow-box event. 
 
 ```{r}
-summary(model)
-#TukeyHSD(aov(LT ~ age_months * condition * event, data=main_data))
+##### (7.5 mos, side, wide) - (7.5 mos, side, narrow) #####
+# reference group: 7.5 mos, side, narrow
+# now with middle contact as reference level
+model = lm(LT ~ age_months * C( main_data$condition, base = 2 ) * event, data=main_data)
+summ = summary(model)
+
+# F stat
+compareValues( reportedValue = 9.72, obtainedValue = summ$coefficients[[ "eventwide-box", "t value" ]]^2 )
+
+# yes, p < 0.005
+summ$coefficients[[ "eventwide-box", "Pr(>|t|)" ]]
+
+# Cohen's d
+compareValues( reportedValue = 1.38, obtainedValue = cohensD( LT ~ event, data=main_data[ main_data$age_months == "7.5" & main_data$condition == "side", ] ) )
+
+
+#### (7.5 mos, middle, wide) - (7.5 mos, middle, narrow) #####
+# reference group: 7.5 mos, middle, narrow
+# same fit as before
+model <- lm(LT ~ age_months * condition * event, data=main_data)
+summ = summary(model)
+
+# F-stat
+compareValues( reportedValue = 12.32, obtainedValue = summ$coefficients[[ "eventwide-box", "t value" ]]^2 )
+
+# yes, p < 0.001
+summ$coefficients[[ "eventwide-box", "Pr(>|t|)" ]]
+
+# Cohen's d
+compareValues( reportedValue = 1.83, obtainedValue = cohensD( LT ~ event, data=main_data[ main_data$age_months == "7.5" & main_data$condition == "middle", ] ) )
+
 ```
 
-> At 8.5 months, infants in the side-contact condition again looked reliably longer if shown the wide-box as opposed to the narrow-box event, F(1, 56) = 18.33, p < 0.0001, d = 2.00, but infants in the middle-contact condition looked equally at the two events, F(1, 56) < 1. The two age groups differed reliably in their looking times at the wide-box event in the middle-contact condition, F(1, 56) = 7.96, p < 0.01, d = 1.43, but not the side-contact condition, F(1, 56) = 1.16, p > 0.25; there were no significant differences for the narrow-box event, both Fs(1, 56) < 1.84, ps > 0.20.
+
+> At 8.5 months, infants in the side-contact condition again looked reliably longer if shown the wide-box as opposed to the narrow-box event, F(1, 56) = 18.33, p < 0.0001, d = 2.00, but infants in the middle-contact condition looked equally at the two events, F(1, 56) < 1.
+
+
+```{r}
+##### (8.5 mos, side, wide) - (8.5 mos, side, narrow) ######
+# reference group: 8.5 mos, side, narrow
+model = lm(LT ~ C( main_data$age_months, base = 2 ) * C( main_data$condition, base = 2 ) * event, data=main_data)
+summ = summary(model)
+
+# F stat
+compareValues( reportedValue = 18.33, obtainedValue = summ$coefficients[[ "eventwide-box", "t value" ]]^2 )
+
+# yes, p < 0.0001
+summ$coefficients[[ "eventwide-box", "Pr(>|t|)" ]]
+
+# Cohen's d
+compareValues( reportedValue = 2.00, obtainedValue = cohensD( LT ~ event, data=main_data[ main_data$age_months == "8.5" & main_data$condition == "side", ] ) )
+
+
+##### (8.5 mos, middle, wide) - (8.5 mos, middle, narrow) #####
+# reference group: 8.5 mos, middle, narrow
+model <- lm(LT ~ C( main_data$age_months, base=2 ) * condition * event, data=main_data)
+summ = summary(model)
+
+# yes, F < 1
+summ$coefficients[[ "eventwide-box", "t value" ]]^2
+```
+
+
+> The two age groups differed reliably in their looking times at the wide-box event in the middle-contact condition, F(1, 56) = 7.96, p < 0.01, d = 1.43, but not the side-contact condition, F(1, 56) = 1.16, p > 0.25; ...
+
+```{r}
+##### (8.5 mos, middle, wide) - (7.5 mos, middle, wide) ######
+# reference group: 8.5 mos, middle, wide
+model = lm(LT ~ age_months * condition * C( main_data$event, base=2 ), data=main_data)
+summ = summary(model)
+
+# F stat
+compareValues( reportedValue = 7.96, obtainedValue = summ$coefficients[[ "age_months8.5", "t value" ]]^2 )
+
+# yes, p < 0.01
+summ$coefficients[[ "age_months8.5", "Pr(>|t|)" ]]
+
+# Cohen's d
+compareValues( reportedValue = 1.43, obtainedValue = cohensD( LT ~ age_months, data=main_data[ main_data$event == "wide-box" & main_data$condition == "middle", ] ) )
+
+
+##### (8.5 mos, side, narrow) - (7.5 mos, side, narrow) ######
+# reference group: 8.5 mos, middle, narrow
+model = lm(LT ~ age_months * C( main_data$condition, base=2 ) * C( main_data$event, base=2 ), data=main_data)
+summ = summary(model)
+
+# F stat
+compareValues( reportedValue = 1.16, obtainedValue = summ$coefficients[[ "age_months8.5", "t value" ]]^2 )
+
+# yes, p > 0.25
+summ$coefficients[[ "age_months8.5", "Pr(>|t|)" ]]
+```
+
+> ... there were no significant differences for the narrow-box event, both Fs(1, 56) < 1.84, ps > 0.20.
+
+```{r}
+###### (8.5, middle, narrow) - (7.5, middle, narrow) #####
+model <- lm(LT ~ age_months * condition * event, data=main_data)
+summ = summary(model)
+
+# yes, less than F = 1.84 (just barely)
+summ$coefficients[[ "age_months8.5", "t value" ]]^2
+
+#~~~~~~ P = 0.18, WHICH DOESN'T MATCH. BUT NO DECISION ERROR. 
+compareValues( reportedValue = 0.20, obtainedValue = summ$coefficients[[ "age_months8.5", "Pr(>|t|)" ]], isP = TRUE)
+
+# ~~~~~~~~~ problem with compareValues: does not understand trailing zeroes
+compareValues( reportedValue = 0.200, obtainedValue = 0.209, isP = TRUE)
+
+
+
+
+###### (8.5, side, narrow) - (7.5, side, narrow) #####
+model <- lm(LT ~ age_months * C( main_data$condition, base=2 ) * event, data=main_data)
+summ = summary(model)
+
+# yes, less than F = 1.84
+summ$coefficients[[ "age_months8.5", "t value" ]]^2
+
+# yes, greater than p = 0.20
+summ$coefficients[[ "age_months8.5", "Pr(>|t|)" ]]
+
+```
+
+
 
 ## Step 5: Conclusion
 
-This report successfully reproduced all the descriptive statistics reported in the original paper. It also successfully reproduced the ANOVA reported in the target outcome above. The only problem encountered was that the data provided was not readily useful and needed cleanup. It is preferable if data is provided in a tidy format.
+This report successfully reproduced all the descriptive statistics reported in the original paper. It also successfully reproduced the ANOVA reported in the target outcome above and nearly all the planned contrasts, except that one p-value reported as being > 0.20 was actually equal to 0.18 (1 major numerical error).
+
+The data provided were easy to understand but required manual cleaning (moving columns around) to enable analysis.
 
 ```{r}
-codReport(Report_Type = 'pilot',
+codReport(Report_Type = 'copilot',
           Article_ID = 'htkUz', 
-          Insufficient_Information_Errors = 1,
+          Insufficient_Information_Errors = 0,
           Decision_Errors = 0, 
-          Major_Numerical_Errors = 0, 
+          Major_Numerical_Errors = 1, 
           Minor_Numerical_Errors = 0)
 ```
 
